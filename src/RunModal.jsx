@@ -5,18 +5,33 @@ export default function RunModal({ project, onClose, onTrigger }) {
   const [environment, setEnvironment] = useState("DEV");
   const [executionDate, setExecutionDate] = useState("");
 
+  function triggerRun() {
+    const runData = {
+      referenceId,
+      environment,
+      executionDate,
+      projectId: project.id,
+      runId: "RUN-" + Date.now(),   // unique run ID
+    };
+
+    onTrigger(runData);
+  }
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-[450px]">
-        
+      <div className="bg-white p-6 rounded-xl shadow-xl w-[450px]">
+
+        {/* Title */}
         <h2 className="text-xl font-semibold mb-3">
-          Trigger QA Run — {project.name}
+          Trigger QA Run — {project.id}
         </h2>
 
+        {/* SharePoint source note */}
         <p className="text-sm text-gray-600 mb-4">
           Inputs configured from <strong>SharePoint source</strong>.
         </p>
 
+        {/* Reference ID */}
         <label className="block font-medium">Reference ID</label>
         <input
           type="text"
@@ -26,6 +41,7 @@ export default function RunModal({ project, onClose, onTrigger }) {
           placeholder="Enter Reference ID"
         />
 
+        {/* Environment dropdown */}
         <label className="block font-medium mt-4">Environment</label>
         <select
           value={environment}
@@ -38,6 +54,7 @@ export default function RunModal({ project, onClose, onTrigger }) {
           <option>PROD</option>
         </select>
 
+        {/* Execution Date */}
         <label className="block font-medium mt-4">Execution Date</label>
         <input
           type="date"
@@ -46,6 +63,7 @@ export default function RunModal({ project, onClose, onTrigger }) {
           className="border rounded px-3 py-2 w-full mt-1"
         />
 
+        {/* Buttons */}
         <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={onClose}
@@ -55,14 +73,7 @@ export default function RunModal({ project, onClose, onTrigger }) {
           </button>
 
           <button
-            onClick={() =>
-              onTrigger({
-                referenceId,
-                environment,
-                executionDate,
-                projectId: project.id,
-              })
-            }
+            onClick={triggerRun}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Trigger Run
